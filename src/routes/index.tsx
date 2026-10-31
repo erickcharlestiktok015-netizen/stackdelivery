@@ -9,7 +9,7 @@ import {
 const WHATSAPP = "5531998424986";
 const MSG =
   "Olá! Vi a apresentação do ecossistema de delivery próprio e gostaria de ver uma demonstração prática pro meu restaurante.";
-const WA_URL = `https://wa.me/${WHATSAPP}?text=${encodeURIComponent(MSG)}`;
+const WA_URL = `https://api.whatsapp.com/send?phone=${WHATSAPP}&text=${encodeURIComponent(MSG)}`;
 
 export const Route = createFileRoute("/")({
   head: () => ({
@@ -69,7 +69,7 @@ function Index() {
               {step + 1} de {STEPS.length} · {STEPS[step]}
             </p>
           </div>
-          <a href={WA_URL} target="_blank" rel="noreferrer" aria-label="Falar no WhatsApp" className="inline-flex items-center gap-1.5 rounded-full glass px-3 py-2 text-xs text-muted-foreground hover:text-primary transition-colors whitespace-nowrap">
+          <a href={WA_URL} aria-label="Falar no WhatsApp" className="inline-flex items-center gap-1.5 rounded-full glass px-3 py-2 text-xs text-muted-foreground hover:text-primary transition-colors whitespace-nowrap">
             <MessageCircle className="size-5 text-primary" /> <span className="hidden sm:inline">Pular para o WhatsApp</span>
           </a>
         </div>
@@ -114,7 +114,7 @@ function Index() {
               <span className="md:hidden">Avançar</span><span className="hidden md:inline">{next[step]}</span> <ArrowRight className="size-5" />
             </motion.button>
           ) : (
-            <a href={WA_URL} target="_blank" rel="noreferrer" className="md:hidden flex-1 inline-flex items-center justify-center gap-2 rounded-xl bg-primary text-primary-foreground h-14 font-bold pulse-cta">
+            <a href={WA_URL} className="md:hidden flex-1 inline-flex items-center justify-center gap-2 rounded-xl bg-primary text-primary-foreground h-14 font-bold pulse-cta">
               <MessageCircle className="size-5" /> Chamar no WhatsApp
             </a>
           )}
@@ -321,7 +321,7 @@ function Step5({ onRestart }: { onRestart: () => void }) {
           <li key={t} className="flex gap-3 text-lg"><span className="size-6 rounded-full bg-primary grid place-items-center shrink-0"><Check className="size-4 text-primary-foreground" /></span>{t}</li>
         ))}
       </ul>
-      <motion.a whileHover={{ scale: 1.04 }} whileTap={{ scale: 0.97 }} href={WA_URL} target="_blank" rel="noreferrer" className="mt-10 inline-flex items-center gap-3 rounded-2xl bg-primary text-primary-foreground w-full sm:w-auto justify-center px-6 py-5 text-base md:text-xl font-bold pulse-cta">
+      <motion.a whileHover={{ scale: 1.04 }} whileTap={{ scale: 0.97 }} href={WA_URL} className="mt-10 inline-flex items-center gap-3 rounded-2xl bg-primary text-primary-foreground w-full sm:w-auto justify-center px-6 py-5 text-base md:text-xl font-bold pulse-cta">
         <MessageCircle className="size-7" /> SOLICITAR DEMONSTRAÇÃO NO WHATSAPP
       </motion.a>
       <button onClick={onRestart} className="mt-6 inline-flex items-center gap-2 text-muted-foreground hover:text-foreground">
