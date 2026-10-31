@@ -7,6 +7,7 @@ import {
 } from "lucide-react";
 
 import { WA_URL, isInAppBrowser, openWhatsAppApp } from "@/lib/whatsapp";
+import { OpenInBrowserGate } from "@/components/OpenInBrowserGate";
 
 export const Route = createFileRoute("/")({
   head: () => ({
@@ -67,6 +68,9 @@ function Index() {
   }, []);
 
   const next = ["Avançar: Conhecer a Solução", "Avançar: Calcular Minha Economia", "Avançar: Como Acelerar as Vendas", "Avançar: Ver Demonstração Privada"];
+
+  const [skipGate, setSkipGate] = useState(false);
+  if (inApp && !skipGate) return <OpenInBrowserGate onSkip={() => setSkipGate(true)} />;
 
   return (
     <div className="min-h-screen flex flex-col">
