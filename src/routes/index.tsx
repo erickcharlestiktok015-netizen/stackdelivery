@@ -45,6 +45,8 @@ function Index() {
 
   // Open the WhatsApp app directly on phones (TikTok's browser shows a blank page otherwise).
   const [waHelp, setWaHelp] = useState(false);
+  const [inApp, setInApp] = useState(false);
+  useEffect(() => { setInApp(isInAppBrowser()); }, []);
   useEffect(() => {
     const onClick = (e: MouseEvent) => {
       const a = (e.target as HTMLElement)?.closest?.("a[href^='https://api.whatsapp.com']");
@@ -83,6 +85,25 @@ function Index() {
               Copiar link do site
             </button>
             <button onClick={() => setWaHelp(false)} className="mt-3 text-sm text-muted-foreground">Fechar</button>
+          </div>
+        </div>
+      )}
+      {inApp && (
+        <div className="relative z-30 bg-primary text-primary-foreground">
+          <div className="mx-auto max-w-6xl px-4 py-3 flex items-center gap-3">
+            <Smartphone className="size-6 shrink-0" />
+            <p className="flex-1 text-xs sm:text-sm font-semibold leading-snug">
+              Para o WhatsApp funcionar, abra esta página no navegador: toque nos <b>3 pontinhos (⋯)</b> no canto da tela e escolha <b>"Abrir no navegador"</b>.
+            </p>
+            <button
+              onClick={() => { navigator.clipboard?.writeText(window.location.href); }}
+              className="shrink-0 rounded-lg bg-background/20 px-3 py-2 text-xs font-bold"
+            >
+              Copiar link
+            </button>
+            <button onClick={() => setInApp(false)} aria-label="Fechar aviso" className="shrink-0 p-1 opacity-80">
+              <X className="size-4" />
+            </button>
           </div>
         </div>
       )}
