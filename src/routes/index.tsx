@@ -6,10 +6,7 @@ import {
   X, TrendingUp, Megaphone, RotateCcw, MapPin,
 } from "lucide-react";
 
-const WHATSAPP = "5531998424986";
-const MSG =
-  "Olá! Vi a apresentação do ecossistema de delivery próprio e gostaria de ver uma demonstração prática pro meu restaurante.";
-const WA_URL = `https://api.whatsapp.com/send?phone=${WHATSAPP}&text=${encodeURIComponent(MSG)}`;
+import { WA_URL, isInAppBrowser, openWhatsAppApp } from "@/lib/whatsapp";
 
 export const Route = createFileRoute("/")({
   head: () => ({
@@ -46,10 +43,49 @@ function Index() {
     return () => window.removeEventListener("keydown", h);
   }, []);
 
+  // Open the WhatsApp app directly on phones (TikTok's browser shows a blank page otherwise).
+  const [waHelp, setWaHelp] = useState(false);
+  useEffect(() => {
+    const onClick = (e: MouseEvent) => {
+      const a = (e.target as HTMLElement)?.closest?.("a[href^='https://api.whatsapp.com']");
+      if (!a) return;
+      if (!openWhatsAppApp()) return; // desktop: normal link
+      e.preventDefault();
+      const t = window.setTimeout(() => {
+        if (document.visibilityState === "visible") {
+          if (isInAppBrowser()) setWaHelp(true);
+          else window.location.href = WA_URL;
+        }
+      }, 1800);
+      const cancel = () => { if (document.visibilityState === "hidden") window.clearTimeout(t); };
+      document.addEventListener("visibilitychange", cancel, { once: true });
+    };
+    document.addEventListener("click", onClick, true);
+    return () => document.removeEventListener("click", onClick, true);
+  }, []);
+
   const next = ["Avançar: Conhecer a Solução", "Avançar: Calcular Minha Economia", "Avançar: Como Acelerar as Vendas", "Avançar: Ver Demonstração Privada"];
 
   return (
     <div className="min-h-screen flex flex-col">
+      {waHelp && (
+        <div className="fixed inset-0 z-50 grid place-items-center bg-background/80 backdrop-blur-sm p-4" onClick={() => setWaHelp(false)}>
+          <div className="glass rounded-2xl p-6 max-w-sm w-full text-center" onClick={(e) => e.stopPropagation()}>
+            <MessageCircle className="size-10 text-primary mx-auto" />
+            <h3 className="mt-3 text-xl font-bold">Abra no navegador</h3>
+            <p className="mt-2 text-sm text-muted-foreground">
+              O navegador do TikTok bloqueia o WhatsApp. Toque nos <b>3 pontinhos (⋯)</b> no canto da tela e escolha <b>"Abrir no navegador"</b>, depois toque no botão de novo.
+            </p>
+            <button
+              onClick={() => { navigator.clipboard?.writeText(window.location.href); }}
+              className="mt-5 w-full rounded-xl bg-primary text-primary-foreground h-12 font-bold"
+            >
+              Copiar link do site
+            </button>
+            <button onClick={() => setWaHelp(false)} className="mt-3 text-sm text-muted-foreground">Fechar</button>
+          </div>
+        </div>
+      )}
       <header className="sticky top-0 z-20 glass border-x-0 border-t-0">
         <div className="mx-auto max-w-6xl px-4 py-3 flex items-center gap-3">
           <div className="flex-1 min-w-0">
